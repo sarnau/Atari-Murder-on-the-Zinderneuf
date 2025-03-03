@@ -1,5 +1,6 @@
-IADD:00000002:/Murder on the Zinderneuf.atr
-IDSET:/Murder on the Zinderneuf.atr:c0a81c9ddc9122022987243250
-IDEL:/Murder on the Zinderneuf.atr
-IADD:00000003:/Murder on the Zinderneuf (1983)[a].atx
-IDSET:/Murder on the Zinderneuf (1983)[a].atx:c0a81c9ddf3122087574539125
+IDEL:/Murder on the Zinderneuf (1983)[a].atx
+IADD:00000004:/Murder on the Zinderneuf (1983)[a].atx.atboot
+IDSET:/Murder on the Zinderneuf (1983)[a].atx.atboot:c0a81c9e8ff129127054897250
+IADD:00000005:/SCEN1.OBJ
+IDSET:/SCEN1.OBJ:c0a81c9ea9c130471368450833
+IDEL:/SCEN1.OBJ
