@@ -34,7 +34,7 @@ GAME_FILES = './Gamefiles/'
 if not os.path.exists(GAME_FILES):
     os.makedirs(GAME_FILES)
 
-data = bytearray(open(GAME_FILES+'CLUELIST.OBJ','rb').read())
+data = bytearray(open(GAME_FILES+'ASMMAP.OBJ','rb').read())
 #dump_memory_block(data)
 
 offset = 0
