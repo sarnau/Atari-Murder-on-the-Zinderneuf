@@ -34,7 +34,7 @@ GAME_FILES = './Gamefiles/'
 if not os.path.exists(GAME_FILES):
     os.makedirs(GAME_FILES)
 
-data = bytearray(open(GAME_FILES+'ASMMAP.OBJ','rb').read())
+data = bytearray(open(GAME_FILES+'SCEN1.OBJ','rb').read())
 #dump_memory_block(data)
 
 offset = 0
@@ -46,7 +46,7 @@ buffer = None
 while offset < len(data):
 	sadr = data[offset+0] + (data[offset+1]<<8)
 	eadr = data[offset+2] + (data[offset+3]<<8)
-	#print("$%04x-$%04x" % (sadr,eadr))
+	print("$%04x: $%04x-$%04x" % (offset, sadr,eadr))
 	offset += 4
 	blockLen = eadr - sadr + 1
 	if sadr != endAdr + 1:
