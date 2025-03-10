@@ -21,15 +21,20 @@ for color in COLORTAB.split(' '):
 img = Image.new('RGB', (MAP_WIDTH * CHAR_WIDTH * COLOR_BITS, int(MAP_HEIGHT * CHAR_HEIGHT)), color = 'white')
 draw = ImageDraw.Draw(img)
 
+tiles = {}
 for row in range(MAP_HEIGHT):
 	for col in range(MAP_WIDTH):
 		tile = asmmap[col + row * MAP_WIDTH]
+		tiles[tile] = True
 		fonttile = map_font[tile * 8:tile * 8+8]
 		for frow in range(CHAR_HEIGHT):
-			for fcol in range(CHAR_WIDTH):
+			for fcol in reversed(range(CHAR_WIDTH)):
 				colVal = (fonttile[frow] >> (COLOR_BITS*fcol)) & ((1<<COLOR_BITS)-1)
-				color = COLORS[(colVal << 3) + 2]
+				if colVal == 0x00:
+					color = COLORS[0]
+				else:
+					color = COLORS[(colVal << 3) + 4]
 				for p in range(COLOR_BITS):
-					draw.point([((col * CHAR_WIDTH + fcol) * COLOR_BITS + p, row * CHAR_HEIGHT + frow)], color)
+					draw.point([((col * CHAR_WIDTH + ((CHAR_WIDTH-1)-fcol)) * COLOR_BITS + p, row * CHAR_HEIGHT + frow)], color)
 
 img.save('ASMMAP.png')
