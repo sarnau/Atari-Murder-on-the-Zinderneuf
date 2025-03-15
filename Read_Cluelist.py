@@ -58,7 +58,7 @@ for filename in sorted(os.listdir(DIR)):
 	ret = loadObjectFile.loadObj(DIR + filename)
 	if not ret:
 		continue
-	# detective files are loaded to $7000
+	# the cluelist is loaded to $7800
 	loadAdr = list(ret.keys())[0]
 	if loadAdr != 0x7800:
 		continue
