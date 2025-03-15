@@ -37,7 +37,11 @@ def getString(data,offset):
 		offset += 1
 		if ch == 0x9B: # EOL
 			break
-		if ch == 0x3C:
+		elif ch == 0x22:
+			ch = '“'
+		elif ch == 0x3B:
+			ch = '”'
+		elif ch == 0x3C:
 			ch = 'b'
 		elif ch == 0x3D:
 			ch = 'f'
@@ -54,11 +58,15 @@ def getString(data,offset):
 		elif ch == 0x5E:
 			ch = 'd'
 		elif ch == 0x60:
-			ch = '.'
+			ch = ','
 		elif ch == 0xD0:
 			ch = '<DETECTIVE SIR/MISS>'
 		elif ch == 0xD1:
 			ch = '<VICTIM FIRST/LASTNAME>'
+		elif ch == 0xD2:
+			ch = '<WORD SENTENCE START>'
+		elif ch == 0xD3:
+			ch = '<WORD SENTENCE END>'
 		elif ch == 0xD4:
 			ch = '<DETECTIVE>'
 		elif ch >= 0x80:
@@ -94,7 +102,7 @@ for filename in sorted(os.listdir(DIR)):
 	elif detSex == 1:
 		detSex = 'FEMALE'
 	detectiveFullName = ' '.join((	getString(detective,detTitle),getString(detective,detFirstNameAdr),getString(detective,detLastNameAdr))).strip()
-	print('ID          #%d : %s (%s)' % (detID,detectiveFullName,detSex))
+	print('ID          #%d: %s (%s)' % (detID,detectiveFullName,detSex))
 	print('COLOR       $%02x' % detColor)
 	print('SEARCH      %d' % detSearch)
 	print('START       %s' % getString(detective,detStartAdr))
@@ -108,14 +116,16 @@ for filename in sorted(os.listdir(DIR)):
 				mood -= 1
 			offs += 1
 		moods.append(getString(detective,offs))
-	print('MOODS       %s' % ','.join(moods))
 	personFlags = []
 	for flag in struct.unpack('15B', detective[0x10:0x1F]):
 		if flag:
-			personFlags.append('L')
+			personFlags.append('LAST')
 		else:
-			personFlags.append('F')
-	print('PERSONFLAGS %s' % ''.join(personFlags[:moodCount]))
+			personFlags.append('FIRST')
+	moodsStr = []
+	for mood,person in zip(moods,personFlags[:moodCount]):
+		moodsStr.append('%s (%s)' % (mood,person))
+	print('MOODS       %s' % ','.join(moodsStr))
 	print('QUESTION BASED ON MOOD:')
 	for mood in range(moodCount):
 		interrog  = []
