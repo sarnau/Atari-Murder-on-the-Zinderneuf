@@ -5,10 +5,10 @@ import os
 import struct
 import loadObjectFile
 
-PIXEL_SET = '█︎'
-PIXEL_CLEAR = ' '
-
 def drawFont(data,addr,firstChar,lastChar):
+	PIXEL_SET = '█︎'
+	PIXEL_CLEAR = ' '
+	
 	width = 16
 	lineLen = 4
 	gap = 0
@@ -105,6 +105,7 @@ for filename in sorted(os.listdir(DIR)):
 	print('ID          #%d: %s (%s)' % (detID,detectiveFullName,detSex))
 	print('COLOR       $%02x' % detColor)
 	print('SEARCH      %d' % detSearch)
+	print('AUDIO CH2   $%02x:$%02x $%02x:$%02x' % (detective[0x73],detective[0x75],detective[0x74],detective[0x76]))
 	print('START       %s' % getString(detective,detStartAdr))
 	print('FAIL        %s' % getString(detective,detWrongConfessionAdr))
 	moodCount = detective[detInterrogMoodAdr]
