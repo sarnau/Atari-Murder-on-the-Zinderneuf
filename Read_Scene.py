@@ -131,18 +131,19 @@ for filename in sorted(os.listdir(DIR)):
 		continue
 	# scene files are loaded to $4800
 	loadAdr = list(ret.keys())[0]
-	if loadAdr != 0x4800:
+	SCENE_ADR = 0x4800
+	if loadAdr != SCENE_ADR:
 		continue
 	scene = ret[loadAdr]
 	print(filename[:-4])
 	print('=' * (len(filename)-4))
-	print(parseLSB_MSB_Text(scene, 0x4800, 48, 0x0030, 0x0000))
+	print(parseLSB_MSB_Text(scene, SCENE_ADR, 48, 0x0030, 0x0000))
 	print()
-	print(parseLSB_MSB_Text(scene, 0x4800, 24, 0x0078, 0x0060))
+	print(parseLSB_MSB_Text(scene, SCENE_ADR, 24, 0x0078, 0x0060))
 	print()
 	print('Clues:')
-	print(parseLSB_MSB_Text(scene, 0x4800, 8, 0x0188, 0x0190))
+	print(parseLSB_MSB_Text(scene, SCENE_ADR, 8, 0x0188, 0x0190))
 	print()
 	print('Confession:')
-	print(parseLSB_MSB_Text(scene, 0x4800, 8, 0x01B8, 0x01C0))
+	print(parseLSB_MSB_Text(scene, SCENE_ADR, 8, 0x01B8, 0x01C0))
 	break
