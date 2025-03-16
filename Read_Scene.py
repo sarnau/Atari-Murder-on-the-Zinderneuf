@@ -11,7 +11,9 @@ def getString(data,offset):
 	while offset < len(data):
 		ch = data[offset]
 		offset += 1
-		if ch == 0x22:
+		if ch == 0x9B: # Atari EOL
+			break
+		elif ch == 0x22:
 			ch = '“'
 		elif ch == 0x3B:
 			ch = '”'
@@ -33,15 +35,14 @@ def getString(data,offset):
 			ch = 'd'
 		elif ch == 0x60:
 			ch = ','
-		elif ch >= 0x80 and ch <= 0x8F:
+		elif (ch & 0xF0) == 0x80:
 			ch = '<SUSPECT CALLS %s>' % SUSPECTS[ch & 0xF]
-		elif ch == 0x9B: # Atari EOL
-			break
 		elif (ch & 0xF0) == 0x90:
-			ch = '<PRONOUN %s/%s>' % (PRONOUNS[ch & 0xF],PRONOUNS[(ch & 0xF)+1])
-		elif ch >= 0xA0 and ch <= 0xAF:
+			pidx = (ch & 0xF) * 2
+			ch = '<PRONOUN %s/%s>' % (PRONOUNS[pidx],PRONOUNS[pidx+1])
+		elif (ch & 0xF0) == 0xA0:
 			ch = '<PERSON %s>' % SUSPECTS[ch & 0xF]
-		elif ch >= 0xB0 and ch <= 0xBF:
+		elif (ch & 0xF0) == 0xB0:
 			ch = '<PERSON %s>' % SUSPECTS[ch & 0xF]
 		elif (ch & 0xF0) == 0xC0:
 			ch = '<VERB %s/%s>' % (VERBS[ch & 0xF],VERBS[(ch & 0xF)+1])
@@ -55,7 +56,7 @@ def getString(data,offset):
 			ch = '<WORD SENTENCE END>'
 		elif ch == 0xD4:
 			ch = '<DETECTIVE>'
-		elif ch >= 0x80:
+		elif ch >= 0x80: # unknown codes
 			ch = '<$%02x>' % ch
 		else:
 			ch = chr(ch)
