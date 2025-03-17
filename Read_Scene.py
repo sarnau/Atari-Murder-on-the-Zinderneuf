@@ -104,6 +104,7 @@ suspect_firstname = parseLSB_Text(gamecode,0,17,0x1EB8,0x1F)
 suspect_lastname = parseLSB_Text(gamecode,0,17,0x1EC9,0x1F)
 for first,last in zip(suspect_firstname,suspect_lastname):
 	SUSPECTS.append('%s %s' % (first,last))
+pp.pprint(SUSPECTS)
 
 room = getString(gamecode,0x1dad) # 'Room '
 rooms = parseLSB_Text(gamecode,0,19,0x1D63,0x1D) # The room names
@@ -114,6 +115,7 @@ for idx in range(len(rooms)):
 	else: # the room numbers have a guest assigned to them
 		name = '%s%s: %s' % (room, rooms[idx], SUSPECTS[idx])
 	ROOMNAMES.append(name)
+pp.pprint(ROOMNAMES)
 
 # Sentence start based on which person the detective talks to
 sentence_start = parseLSB_Text(gamecode,0,16,0x2412,0x24)
