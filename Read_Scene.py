@@ -4,7 +4,13 @@
 import os
 import sys
 import struct
+import pprint
 import loadObjectFile
+
+pp = pprint.PrettyPrinter(depth=6)
+
+def chunks(a,n):
+	return [a[i:i + n] for i in range(0, len(a), n)]
 
 def getString(data,offset):
 	s = ''
@@ -109,19 +115,27 @@ for idx in range(len(rooms)):
 		name = '%s%s: %s' % (room, rooms[idx], SUSPECTS[idx])
 	ROOMNAMES.append(name)
 
+# Sentence start based on which person the detective talks to
 sentence_start = parseLSB_Text(gamecode,0,16,0x2412,0x24)
 #print(sentence_start)
+# Sentence end based on which person the detective talks to
 sentence_end = parseLSB_Text(gamecode,0,16,0x24F1,0x25)
 #print(sentence_end)
+
 knows_nothing = parseLSB_Text(gamecode,0,16,0x2817,0x27)
 #print(knows_nothing)
-words = parseLSB_MSB_Text(gamecode, 0, 16, 0x2827, 0x2837)
-#print(words)
+
+# if the person is ask about themselves as the suspect
 words = parseLSB_MSB_Text(gamecode, 0, 16, 0x29d3, 0x29e3)
 #print(words)
+
+# if the mood table has a zero entry, the person does not answer the above question, but replies like this
+words = parseLSB_MSB_Text(gamecode, 0, 16, 0x2827, 0x2837)
+#print(words)
+
+# person has no more answers about the suspect
 words = parseLSB_MSB_Text(gamecode, 0, 16, 0x2bc2, 0x2bd2)
 #print(words)
-#sys.exit(0)
 
 DIR = './Gamefiles/'
 for filename in sorted(os.listdir(DIR)):
@@ -138,13 +152,53 @@ for filename in sorted(os.listdir(DIR)):
 	scene = ret[loadAdr]
 	print(filename[:-4])
 	print('=' * (len(filename)-4))
-	print(parseLSB_MSB_Text(scene, SCENE_ADR, 48, 0x0030, 0x0000))
+	if True:
+		pp.pprint(chunks(parseLSB_MSB_Text(scene, SCENE_ADR, 48, 0x0030, 0x0000),8))
+		print()
+		pp.pprint(chunks(parseLSB_MSB_Text(scene, SCENE_ADR, 24, 0x0078, 0x0060),8))
+		print()
+		print('Clues:')
+		pp.pprint(parseLSB_MSB_Text(scene, SCENE_ADR, 8, 0x0188, 0x0190))
+		print()
+		print('Confession:')
+		pp.pprint(parseLSB_MSB_Text(scene, SCENE_ADR, 8, 0x01B8, 0x01C0))
+		print()
+
+	msbA = list(scene[0x090:0x090+48])
+	lsbA = list(scene[0x0C0:0x0C0+48])
+	bits = []
+	for m,l in zip(msbA,lsbA):
+		bits.append('%04x' % ((m << 8) + l))
+	print(bits)
+	masks = list(scene[0x0F0:0x0F0+3*8])
+	bits = []
+	for idx in range(8):
+		bits.append('%02x%02x%02x' % (masks[idx*3+0],masks[idx*3+1],masks[idx*3+2]))
+	print(bits)
+
+	hints = []
+	for idx in range(8):
+		hints.append(list(scene[0x168+4*idx:0x168+4*(idx+1)]))
+	pp.pprint(hints)
+
+	shuffle = list(scene[0x108:0x108+8])
+	for i in range(8):
+		cs = shuffle[i]
+		if cs == 0:
+			cs = 'r'
+		else:
+			j = 0
+			while cs != 0:
+				j += 1
+				cs >>= 1
+			cs = j
+		print('#%d %s: %s' % (i,cs,list(scene[0x120+4*i:0x120+4*(i+1)])))
+
+	al = list(scene[0x140:0x140+16])
+	bl = list(scene[0x150:0x150+16])
+	cl = list(scene[0x160:0x160+8])
+	pp.pprint(al)
+	pp.pprint(bl)
+	pp.pprint(cl)
 	print()
-	print(parseLSB_MSB_Text(scene, SCENE_ADR, 24, 0x0078, 0x0060))
-	print()
-	print('Clues:')
-	print(parseLSB_MSB_Text(scene, SCENE_ADR, 8, 0x0188, 0x0190))
-	print()
-	print('Confession:')
-	print(parseLSB_MSB_Text(scene, SCENE_ADR, 8, 0x01B8, 0x01C0))
 	break
