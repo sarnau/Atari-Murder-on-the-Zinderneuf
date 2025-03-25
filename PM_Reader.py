@@ -1,44 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
-import os
-import struct
-import binascii
-from PIL import Image, ImageDraw, ImageShow, ImageFont
-
 
 PIXEL_SET = '█︎'
 PIXEL_CLEAR = ' '
-
-class bcolors:
-	BLACK = '\033[38;5;0m'
-	WHITE = '\033[38;5;15m'
-	RED = '\033[38;5;1m'
-	CYAN = '\033[38;5;13m'
-	PURPLE = '\033[38;5;5m'
-	GREEN = '\033[38;5;2m'
-	BLUE = '\033[38;5;4m'
-	YELLOW = '\033[38;5;11m'
-
-	ORANGE = '\033[38;5;220m'
-	BROWN = '\033[38;5;88m'
-	LIGHT_RED = '\033[38;5;9m'
-	DARK_GREY = '\033[38;5;238m'
-	GREY = '\033[38;5;244m'
-	LIGHT_GREEN = '\033[38;5;10m'
-	LIGHT_BLUE = '\033[38;5;12m'
-	LIGHT_GREY = '\033[38;5;252m'
-	
-	DEFAULT = '\033[1;39m'
-
-atari_colors = (
-			bcolors.BLACK,
-			bcolors.GREEN,
-			bcolors.BLUE,
-			bcolors.GREY,
-			)
-
 
 def drawFont(addr,firstChar,lastChar):
 	width = 16
