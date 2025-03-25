@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from PIL import Image, ImageDraw
+import loadObjectFile
 
-asmmap = bytearray(open('Zinderneuf.bin','rb').read())
+asmmap = loadObjectFile.loadObj('./Gamefiles/ASMMAP.OBJ')[0x6000]
 map_font = bytearray(open('./Gamefiles/MAP.SET','rb').read())
 
 MAP_HEIGHT = 102
