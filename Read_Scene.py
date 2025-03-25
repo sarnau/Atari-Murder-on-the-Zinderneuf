@@ -104,7 +104,7 @@ suspect_firstname = parseLSB_Text(gamecode,0,17,0x1EB8,0x1F)
 suspect_lastname = parseLSB_Text(gamecode,0,17,0x1EC9,0x1F)
 for first,last in zip(suspect_firstname,suspect_lastname):
 	SUSPECTS.append('%s %s' % (first,last))
-pp.pprint(SUSPECTS)
+#pp.pprint(SUSPECTS)
 
 room = getString(gamecode,0x1dad) # 'Room '
 rooms = parseLSB_Text(gamecode,0,19,0x1D63,0x1D) # The room names
@@ -116,6 +116,33 @@ for idx in range(len(rooms)):
 		name = '%s%s: %s' % (room, rooms[idx], SUSPECTS[idx])
 	ROOMNAMES.append(name)
 pp.pprint(ROOMNAMES)
+
+# ASCII map of the rooms with room numbers
+if False:
+	MAP = []
+	for line in range(102):
+		MAP.append(list(' '*40))
+	
+	room = 0
+	for x1,y1,x2,y2 in zip(gamecode[0x1dba:0x1dba+19],gamecode[0x1dcd:0x1dcd+19],gamecode[0x1de0:0x1de0+19],gamecode[0x1df3:0x1df3+19]):
+		for ys in range(y1,y2+1):
+			if ys == y1 or ys == y2:
+				step = 1
+			else:
+				step = x2-x1
+			for xs in range(x1+1,x2,3):
+				rs = '%02d' % room
+				MAP[ys][xs] = rs[0]
+				MAP[ys][xs+1] = rs[1]
+				if xs+2 >= x2+1:
+					break
+				MAP[ys][xs+2] = ' '
+			for xs in range(x1,x2+1, step):
+				MAP[ys][xs] = '∎'
+		#print('#%d : %d,%d-%d,%d' % (room, x1,y1,x2,y2))
+		room += 1
+	for line in MAP:
+		print(''.join(line))
 
 # Sentence start based on which person the detective talks to
 sentence_start = parseLSB_Text(gamecode,0,16,0x2412,0x24)
@@ -154,7 +181,7 @@ for filename in sorted(os.listdir(DIR)):
 	scene = ret[loadAdr]
 	print(filename[:-4])
 	print('=' * (len(filename)-4))
-	if True:
+	if False:
 		pp.pprint(chunks(parseLSB_MSB_Text(scene, SCENE_ADR, 48, 0x0030, 0x0000),8))
 		print()
 		pp.pprint(chunks(parseLSB_MSB_Text(scene, SCENE_ADR, 24, 0x0078, 0x0060),8))
