@@ -115,7 +115,7 @@ for idx in range(len(rooms)):
 	else: # the room numbers have a guest assigned to them
 		name = '%s%s: %s' % (room, rooms[idx], SUSPECTS[idx])
 	ROOMNAMES.append(name)
-pp.pprint(ROOMNAMES)
+#pp.pprint(ROOMNAMES)
 
 # ASCII map of the rooms with room numbers
 if False:
