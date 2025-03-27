@@ -4,7 +4,6 @@
 import sys
 import os
 import struct
-import binascii
 from PIL import Image, ImageDraw, ImageShow, ImageFont
 
 
